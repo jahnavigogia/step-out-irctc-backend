@@ -1,0 +1,9 @@
+venv/
+.idea/
+bin/
+__pycache__/
+migrations/__pycache__/
+*.py[cod]
+media/
+node_modules
+.env
