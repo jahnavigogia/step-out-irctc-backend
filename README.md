@@ -1,25 +1,25 @@
-# Clone Project
+## Clone Project
 - git clone <repo-link>
 - cd irctc_backend
 
-# Setup Virtual Environment
+## Setup Virtual Environment
 - python -m venv .venv
 - source .venv/bin/activate
 
-# Install dependencies
+## Install dependencies
 - pip install 0r requirements.txt
 
-# Create .env
+## Create .env
 - cp .env.example .env
 
-# Run migrations
+## Run migrations
 - python manage.py makemigrations
 - pyton manage.py migrate
 
-# Start server
+## Start server
 - python manage.py runserver
 
-# Mongodb logs sample
+## Mongodb logs sample
 -   [
 {
     _id: ObjectId('699dbccafdff619c58ca6400'),
