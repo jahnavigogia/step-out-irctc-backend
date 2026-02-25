@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -49,10 +50,13 @@ class TrainSearchView(APIView):
         result = []
 
         for train in trains:
-            availability, _ = SeatAvailability.objects.get_or_create(
+            availability = SeatAvailability.objects.filter(
                 train=train,
                 journey_date=date
-            )
+            ).first()
+            if not availability:
+                return Response({"error": "Train not available."}, status=status.HTTP_404_NOT_FOUND)
+
             result.append({
                 "train_id": train.id,
                 "train_number": train.train_number,

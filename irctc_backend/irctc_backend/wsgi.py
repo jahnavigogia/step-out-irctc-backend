@@ -1,5 +1,5 @@
 """
-WSGI config for irctc_backend project.
+WSGI config for stepout-irctc project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

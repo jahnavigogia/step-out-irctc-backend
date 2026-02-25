@@ -1,5 +1,5 @@
 """
-URL configuration for irctc_backend project.
+URL configuration for stepout-irctc project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -16,11 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenRefreshView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
+    path('api/', include('accounts.urls')),
+    path('api/''token/refresh/', TokenRefreshView.as_view()),
     path('api/train/', include("trains.urls")),
     path('api/booking/', include("bookings.urls")),
-    path('analytics/', include("analytics.urls")),
+    path('api/analytics/', include("analytics.urls")),
 ]

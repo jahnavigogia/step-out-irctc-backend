@@ -1,5 +1,5 @@
 """
-ASGI config for irctc_backend project.
+ASGI config for stepout-irctc project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
