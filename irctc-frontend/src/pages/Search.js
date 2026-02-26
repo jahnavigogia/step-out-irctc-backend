@@ -22,7 +22,7 @@ export default function Search() {
       return;
     }
 
-    setError(""); // clear old error
+    setError("");
 
     try {
       const res = await API.get(
@@ -32,8 +32,12 @@ export default function Search() {
       setTrains(res.data);
       setSearched(true);
     } catch (err) {
-      setError("Something went wrong");
-    }
+  if (err.response && err.response.data.error) {
+    setError(err.response.data.error);
+  } else {
+    setError("Server error. Please try again.");
+  }
+}
   };
 const bookSeat = async (train_id) => {
   try {
@@ -45,7 +49,11 @@ const bookSeat = async (train_id) => {
 
     alert("Booking Successful");
   } catch (err) {
-    alert("Booking failed");
+    if (err.response && err.response.data.error) {
+      setError(err.response.data.error);
+    } else {
+      setError("Booking failed");
+    }
   }
 };
 
@@ -70,7 +78,18 @@ const bookSeat = async (train_id) => {
 
       <button onClick={searchTrains}>Search</button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+     {error && (
+  <div style={{
+    background: "#ffe6e6",
+    color: "#cc0000",
+    padding: "10px",
+    borderRadius: "6px",
+    marginTop: "10px",
+    width: "fit-content"
+  }}>
+    {error}
+  </div>
+)}
 
       {searched && trains.length === 0 && (
         <p>No trains available</p>
@@ -83,10 +102,32 @@ const bookSeat = async (train_id) => {
   placeholder="Seats"
 />
       {trains.map((t, i) => (
-  <div key={i}>
-    {t.name} - Seats: {t.available_seats}
+  <div key={i} style={{
+    border: "1px solid #ddd",
+    padding: "12px",
+    marginTop: "10px",
+    borderRadius: "8px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "400px"
+  }}>
+    <div>
+      <strong>{t.name}</strong><br/>
+      Seats Available: {t.available_seats}
+    </div>
 
-    <button onClick={() => bookSeat(t.id)}>
+    <button
+      onClick={() => bookSeat(t.id)}
+      style={{
+        background: "#007bff",
+        color: "white",
+        border: "none",
+        padding: "6px 12px",
+        borderRadius: "5px",
+        cursor: "pointer"
+      }}
+    >
       Book
     </button>
   </div>

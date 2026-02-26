@@ -21,14 +21,22 @@ class BookSeatView(APIView):
 
         try:
             with transaction.atomic():
-                availability, _ = SeatAvailability.objects.select_for_update().get_or_create(
+                availability = SeatAvailability.objects.select_for_update().filter(
                     train_id=train_id,
                     journey_date=journey_date
-                )
+                ).first()
+
+                if not availability:
+                    return Response(
+                        {"error": "Train not available."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
 
                 if availability.available_seats < seats:
-                    return Response({"error": "Not enough seats"}, status=status.HTTP_400_BAD_REQUEST)
-
+                    return Response(
+                        {"error": "Not enough seats."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
                 availability.available_seats -= seats
                 availability.save()
 

@@ -34,8 +34,8 @@ class TrainSearchView(APIView):
         offset = int(request.GET.get("offset", 0))
 
         trains = Train.objects.filter(
-            source=source,
-            destination=destination
+            source=source.lower(),
+            destination=destination.lower(),
         )[offset:offset + limit]
 
         end = time.time()
@@ -47,23 +47,24 @@ class TrainSearchView(APIView):
             "execution_time_ms": (end - start) * 1000
         })
 
-        result = []
-
-        for train in trains:
-            availability = SeatAvailability.objects.filter(
-                train=train,
+        availability_map = {
+            a.train: a.available_seats
+            for a in SeatAvailability.objects.filter(
+                train__in=trains,
                 journey_date=date
-            ).first()
-            if not availability:
-                return Response({"error": "Train not available."}, status=status.HTTP_404_NOT_FOUND)
+            )
+        }
 
-            result.append({
+        result = [
+            {
                 "train_id": train.id,
                 "train_number": train.train_number,
                 "name": train.name,
                 "departure_time": train.departure_time,
                 "arrival_time": train.arrival_time,
-                "available_seats": availability.available_seats if availability else 0
-            })
+                "available_seats": availability_map.get(train.id, 0)
+            }
+            for train in trains
+        ]
 
         return Response(result)
